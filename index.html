@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>kikiprompt — Penyusun Prompt Video AI</title>
+<meta name="description" content="kikiprompt membantu Anda menyusun prompt video AI yang terstruktur: video, karakter, dan scene bertahap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&family=Source+Serif+4:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="skip" href="#form-area">Lewati ke formulir</a>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <div class="brand">
+      <span class="brand-name">kikiprompt</span>
+      <span class="brand-sub">Penyusun prompt untuk pembuatan video AI</span>
+    </div>
+    <div class="lang" role="group" aria-label="Bahasa label keluaran">
+      <span class="lang-title">Label keluaran</span>
+      <button type="button" class="lang-btn is-on" data-lang="id" aria-pressed="true">Indonesia</button>
+      <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">English</button>
+      <button type="button" class="lang-btn" id="btn-theme">Tema: Otomatis</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>Susun prompt video AI dengan struktur yang rapi</h1>
+    <p>Prompt yang baik menjawab lima pertanyaan: siapa tampil, apa yang dilakukan, di mana, bagaimana kamera bergerak, dan bagaimana suasananya. Isi kolom di bawah sesuai urutan tersebut, lalu salin hasilnya ke aplikasi video AI pilihan Anda.</p>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Jenis prompt">
+    <button role="tab" id="tab-video" aria-controls="form-area" aria-selected="true" data-mode="video">Prompt video</button>
+    <button role="tab" id="tab-character" aria-controls="form-area" aria-selected="false" data-mode="character">Karakter / model</button>
+    <button role="tab" id="tab-scene" aria-controls="form-area" aria-selected="false" data-mode="scene">Scene bertahap</button>
+  </div>
+
+  <div class="layout">
+    <section id="form-area" class="panel" role="tabpanel" aria-labelledby="tab-video">
+      <h2 id="mode-title">Prompt video</h2>
+      <p id="mode-desc" class="panel-desc"></p>
+      <div id="toolbar" class="toolbar"></div>
+      <form id="form" autocomplete="off" novalidate></form>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="btn-reset">Kosongkan formulir</button>
+      </div>
+      <p class="tool-note draft-note">Isian formulir tersimpan otomatis di peramban ini, jadi aman bila halaman dimuat ulang.</p>
+    </section>
+
+    <aside class="side" aria-label="Hasil prompt">
+      <div class="panel result">
+        <div class="result-head">
+          <h2>Hasil prompt</h2>
+          <span id="count" class="count">0 karakter</span>
+        </div>
+        <div class="fmt" role="group" aria-label="Format keluaran prompt">
+          <span class="lang-title">Format</span>
+          <button type="button" class="fmt-btn is-on" data-format="label" aria-pressed="true">Berlabel</button>
+          <button type="button" class="fmt-btn" data-format="prose" aria-pressed="false">Paragraf</button>
+        </div>
+        <textarea id="output" readonly rows="14" aria-live="polite" placeholder="Hasil prompt akan tampil di sini setelah Anda mengisi formulir."></textarea>
+        <div class="actions">
+          <button type="button" class="btn primary" id="btn-copy">Salin prompt</button>
+          <button type="button" class="btn" id="btn-save">Simpan ke riwayat</button>
+          <button type="button" class="btn" id="btn-download">Unduh .txt</button>
+          <button type="button" class="btn" id="btn-share">Salin tautan berbagi</button>
+        </div>
+        <p id="status" class="status" role="status"></p>
+        <p class="tool-note">Pintasan: Ctrl+Enter menyalin prompt, Ctrl+S menyimpan ke riwayat.</p>
+      </div>
+
+      <div class="panel check">
+        <h2>Pemeriksa prompt</h2>
+        <div id="meter" class="meter" role="progressbar" aria-label="Kelengkapan formulir" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="meter-fill"></div></div>
+        <p id="meter-text" class="tool-note"></p>
+        <ul id="check-list" class="check-list" aria-live="polite"></ul>
+      </div>
+
+      <div class="panel guide">
+        <h2>Catatan dari pengajar</h2>
+        <ul id="guide-list"></ul>
+      </div>
+    </aside>
+  </div>
+
+  <section class="panel history" aria-labelledby="history-title">
+    <div class="result-head">
+      <h2 id="history-title">Riwayat prompt</h2>
+      <button type="button" class="btn ghost small" id="btn-clear-history">Hapus semua</button>
+    </div>
+    <p class="panel-desc">Riwayat tersimpan di peramban ini saja dan tidak dikirim ke mana pun. Gunakan fitur ekspor untuk membuat cadangan.</p>
+    <div class="tool-row history-tools">
+      <label class="sr" for="history-search">Cari riwayat</label>
+      <input type="search" id="history-search" placeholder="Cari kata dalam riwayat">
+      <label class="check-inline"><input type="checkbox" id="history-fav"> Favorit saja</label>
+      <label class="sr" for="history-sort">Urutkan riwayat</label>
+      <select id="history-sort"><option value="new">Terbaru dulu</option><option value="old">Terlama dulu</option><option value="fav">Favorit dulu</option></select>
+      <button type="button" class="btn small" id="btn-export">Ekspor (.json)</button>
+      <button type="button" class="btn small" id="btn-import">Impor</button>
+      <input type="file" id="file-import" accept="application/json,.json" hidden>
+    </div>
+    <p id="history-status" class="status" role="status"></p>
+    <ul id="history-list" class="history-list"></ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>kikiprompt — dibuat oleh KIKISADRAKH.</p>
+    <p class="thanks">Terima kasih kepada Yesus, orang tua, dan semua pihak yang telah memberi dukungan.</p>
+  </div>
+</footer>
+
+<script src="js/platforms.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
